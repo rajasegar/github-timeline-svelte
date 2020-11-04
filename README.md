@@ -1,4 +1,4 @@
-# New Project
+# githuh-timeline-svelte
 
 > ✨ Bootstrapped with Create Snowpack App (CSA).
 

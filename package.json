@@ -2,7 +2,8 @@
   "scripts": {
     "start": "snowpack dev",
     "build": "snowpack build",
-    "test": "jest"
+    "test": "jest",
+    "deploy": "git push && npm run build && surge ./build github-timeline.surge.sh"
   },
   "dependencies": {
     "@octokit/rest": "^18.0.9",
