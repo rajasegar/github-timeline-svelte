@@ -1,4 +1,6 @@
-# githuh-timeline-svelte
+# github-timeline-svelte
+
+[Demo](https://github-timeline.surge.sh)
 
 > ✨ Bootstrapped with Create Snowpack App (CSA).
 
