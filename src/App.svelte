@@ -1,69 +1,85 @@
 <script>
   import {onMount} from 'svelte';
+  import { Octokit } from "@octokit/rest";
+  import Timeline from './Timeline.svelte';
+
   let count = 0;
+  let username;
+  let repos = { data: [] };
   onMount(() => {
     const interval = setInterval(() => count++, 1000);
     return () => {
       clearInterval(interval);
     };
   });
+
+  async function generateTimeLine() {
+    const octokit = new Octokit();
+    repos = await octokit.repos.listForUser({
+      username,
+      type: 'owner',
+      sort: 'created',
+      direction: 'desc'
+    });
+  }
 </script>
 
 <style>
-  :global(body) {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-  .App {
-    text-align: center;
-  }
-  .App code {
-    background: #0002;
-    padding: 4px 8px;
-    border-radius: 4px;
-  }
-  .App p {
-    margin: 0.4rem;
+  :global(body) {	
+  margin: 0;
+  padding: 0;
+  background: rgb(230,230,230);
+  
+  color: rgb(50,50,50);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 112.5%;
+    line-height: 1.6em;
   }
 
-  .App-header {
-    background-color: #f9f6f6;
-    color: #333;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
+  .App {
+    text-align: center;
+    padding: 1em;
   }
-  .App-link {
-    color: #ff3e00;
+
+  .input-field {
+    padding: 1em;
+    font-size: .8em;
+    border-radius: 0.25em;
   }
-  .App-logo {
-    height: 36vmin;
-    pointer-events: none;
-    margin-bottom: 3rem;
-    animation: App-logo-spin infinite 1.6s ease-in-out alternate;
+
+  .button {
+    padding: 1em;
+    border-radius: 0.25em;
+    background: rgb(255, 80,80);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: .8em;
   }
-  @keyframes App-logo-spin {
-    from {
-      transform: scale(1);
-    }
-    to {
-      transform: scale(1.06);
-    }
+
+  .button:hover {
+    background: rgb(255, 40,40);
   }
+
+  footer {
+    margin-top: 2em;
+  }
+
 </style>
 
 <div class="App">
-  <header class="App-header">
-    <img src="/logo.svg" class="App-logo" alt="logo" />
-    <p>Edit <code>src/App.svelte</code> and save to reload.</p>
-    <p>Page has been open for <code>{count}</code> seconds.</p>
-    <p>
-      <a class="App-link" href="https://svelte.dev" target="_blank" rel="noopener noreferrer">
-        Learn Svelte
-      </a>
-    </p>
-  </header>
+  <h1>Github Timeline</h1>
+  <form>
+    <label for="txtUsername">Github user name:</label>
+    <input id="txtUsername" type="text" bind:value={username} class="input-field"/>
+    <button class="button" type="button" on:click={generateTimeLine}>Generate Timeline</button>
+  </form>
+  {#if repos.data.length > 0 }
+    <Timeline repos={repos.data}/>
+  {:else}
+    <p>Loading, please wait...</p>
+  {/if}
+  <footer>
+    <a href="https://github.com/rajasegar/github-timeline-svelte">Github</a>
+  </footer>
 </div>

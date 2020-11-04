@@ -5,6 +5,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@octokit/rest": "^18.0.9",
     "svelte": "^3.24.0"
   },
   "devDependencies": {
